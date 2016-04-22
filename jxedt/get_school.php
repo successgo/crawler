@@ -16,7 +16,6 @@ include_once '../include/functions.php';
 // 中国四个直辖市分别为 : 北京 上海 天津 重庆
 $cities = array('bj', 'sh', 'tj', 'cq');
 
-$school_url = 'http://api.jxedt.com/detail/';
 
 $db = new PDO('mysql:host=localhost;dbname=xihaxueche', USER, PASS);
 !is_object($db) && exit();
@@ -26,8 +25,9 @@ $db = new PDO('mysql:host=localhost;dbname=xihaxueche', USER, PASS);
  * [1] get a very long school list (array)
  */
 
-$school_list = combine_school_list($cities);
-var_dump(count($school_list));
+//$school_list = combine_school_list($cities);
+//var_dump(count($school_list));
+get_school_detail ( 2325 );
 
 // Execution of the crawler End
 
@@ -37,6 +37,17 @@ var_dump(count($school_list));
  * [1] combine_school_list
  * [2] get_school_by_city
  */
+
+function get_school_detail ( $school_id ) {
+    //school detail api : http://api.jxedt.com/detail/2417/?type=jx
+    $school_url = 'http://api.jxedt.com/detail/';
+    if ( empty($school_id) ) {
+        return false;
+    }
+    $url = "$school_url$school_id/?type=jx";
+    $school_detail = file_get_contents($url);
+    var_dump(json_decode($school_detail, true));
+}
 
 function combine_school_list ( $cities ) {
     $school_list = array();
@@ -55,7 +66,7 @@ function combine_school_list ( $cities ) {
     return $school_list;
 } /* combine school list END */
 
-function get_school_by_city( $city ) {
+function get_school_by_city ( $city ) {
     $school_list = array();
     $city_url = 'http://m.jxedt.com/jiaxiao/';
     $url = "$city_url$city/pn1";
