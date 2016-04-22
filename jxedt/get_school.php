@@ -38,23 +38,7 @@ var_dump(count($school_detail));
  * [1] combine_school_list
  * [2] get_school_by_city
  * [3] get_school_detail
- * [4] combine_complete_school_info 
  */
-
-function combine_complete_school_info ( $school_list ) {
-    if ( empty($school_list) || !is_array($school_list) ) {
-        return false;
-    }
-    foreach ( $school_list as $school_index => $school_short_info) {
-        var_dump($school_short_info);
-        exit();
-        $more_detail = get_school_detail($school_short_info['url']);
-        $school_list[$school_index] = array_merge($school_short_info, $more_detail);
-        var_dump($school_list[$school_index]);
-    }
-
-    return $school_list;
-}
 
 function get_school_detail ( $school_id ) {
     $info = array();
