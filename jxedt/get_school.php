@@ -27,7 +27,8 @@ $db = new PDO('mysql:host=localhost;dbname=xihaxueche', USER, PASS);
 
 //$school_list = combine_school_list($cities);
 //var_dump(count($school_list));
-get_school_detail ( 2325 );
+$school_detail = combine_school_list( $cities );
+var_dump(count($school_detail));
 
 // Execution of the crawler End
 
@@ -36,17 +37,46 @@ get_school_detail ( 2325 );
  * Function Definition
  * [1] combine_school_list
  * [2] get_school_by_city
+ * [3] get_school_detail
+ * [4] combine_complete_school_info 
  */
 
+function combine_complete_school_info ( $school_list ) {
+    if ( empty($school_list) || !is_array($school_list) ) {
+        return false;
+    }
+    foreach ( $school_list as $school_index => $school_short_info) {
+        var_dump($school_short_info);
+        exit();
+        $more_detail = get_school_detail($school_short_info['url']);
+        $school_list[$school_index] = array_merge($school_short_info, $more_detail);
+        var_dump($school_list[$school_index]);
+    }
+
+    return $school_list;
+}
+
 function get_school_detail ( $school_id ) {
+    $info = array();
     //school detail api : http://api.jxedt.com/detail/2417/?type=jx
     $school_url = 'http://api.jxedt.com/detail/';
     if ( empty($school_id) ) {
         return false;
     }
     $url = "$school_url$school_id/?type=jx";
-    $school_detail = file_get_contents($url);
-    var_dump(json_decode($school_detail, true));
+    $school_detail = json_decode(file_get_contents($url), true);
+    if ( empty( $school_detail ) ) {
+        return false;
+    }
+    $detail = $school_detail['result']['info'];
+    $info['addr'] = $detail['baseinfoarea']['mapaddr']['text'];
+    $info['lat'] = $detail['baseinfoarea']['mapaddr']['action']['extparam']['lat'];
+    $info['lon'] = $detail['baseinfoarea']['mapaddr']['action']['extparam']['lon'];
+    $info['tel'] = json_encode($detail['baseinfoarea']['tel']);
+    $info['descarea'] = $detail['descarea']['text'];
+    $info['attentionnum'] = $detail['titlearea']['attentionnum'];
+
+    return $info;
 }
 
 function combine_school_list ( $cities ) {
@@ -81,6 +111,9 @@ function get_school_by_city ( $city ) {
             if ( empty($school['title']) ) {
                 continue; // if the school does not have the TITLE, delete it
             }
+            $more_detail = get_school_detail($school['url']);
+            $school = array_merge($school, $more_detail);
+            print_r($school);
             $school_list[] = $school;
         }
     }
