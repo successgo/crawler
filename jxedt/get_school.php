@@ -13,7 +13,7 @@ include_once '../include/functions.php';
  * school detail api : http://api.jxedt.com/detail/2417/?type=jx
  */
 
-// 中国四个直辖市分别为 : 北京 上海 天津 重庆
+// 中国四个直辖市分别为 : 北京 天津 上海 重庆
 $cities = array('bj', 'sh', 'tj', 'cq');
 
 
@@ -81,6 +81,30 @@ function combine_school_list ( $cities ) {
 } /* combine school list END */
 
 function get_school_by_city ( $city ) {
+    $city_id = 0;
+    $province_id = 0;
+    switch ( $city ) {
+        case 'bj': 
+            $city_id = 110100;
+            $province_id = 110000;
+            break;
+        case 'tj': 
+            $city_id = 120100;
+            $province_id = 120000;
+            break;
+        case 'sh': 
+            $city_id = 310100;
+            $province_id = 310000;
+            break;
+        case 'cq': 
+            $city_id = 500100;
+            $province_id = 500000;
+            break;
+        default: 
+            $city_id = 0;
+            $province_id = 0;
+            break;
+    }
     $school_list = array();
     $city_url = 'http://m.jxedt.com/jiaxiao/';
     $url = "$city_url$city/pn1";
@@ -97,6 +121,8 @@ function get_school_by_city ( $city ) {
             }
             $more_detail = get_school_detail($school['url']);
             $school = array_merge($school, $more_detail);
+            $school['province_id'] = $province_id;
+            $school['city_id'] = $city_id;
             print_r($school);
             $school_list[] = $school;
         }
