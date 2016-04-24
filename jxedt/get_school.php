@@ -33,8 +33,8 @@ try {
 
 	foreach ( $school_detail as $school_index => $school ) {
 	    $fields = array(
-		    's_school_name',
-		    's_frdb',
+            's_school_name',
+            's_frdb',
             's_frdb_mobile',
             's_frdb_tel',
             's_yyzz',
@@ -66,7 +66,7 @@ try {
 		    $ok_count++;
 		    echo t() . " 成功写入第: $ok_count 所驾校.\n";
             $save_picture_ok = save_local_picture($sid, 'upload/thumb', $school['s_thumb']);
-            if ( $save_picture_ok ) {
+            if ( $save_picture_ok !== false ) {
                 echo t() . " 保存驾校缩略图到本地成功，路径为: $save_picture_ok.\n";
                 $update_thumb_ok = update_thumb_url($db, $school_tbl, $sid, $save_picture_ok);
                 if ( $update_thumb_ok ) {
@@ -123,6 +123,9 @@ function t( $ts = 0 ) {
 }
 
 function save_local_picture ($id, $path = '.', $picture_url) {
+    if ( empty($picture_url) ) {
+        return '';
+    }
     if ( !file_exists($path) ) {
         mkdir($path, 0777, true);
     }
@@ -244,9 +247,6 @@ function get_school_by_city ( $city ) {
             );
             echo "Get one school:" . $school['s_school_name'] . "\n";
             $school_list[] = $school;
-            if ( count($school_list) > 1 ) {
-                return $school_list;
-            }
         }
     }
     return $school_list;
