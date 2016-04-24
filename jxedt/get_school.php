@@ -15,6 +15,7 @@ include_once '../include/functions.php';
 
 // 中国四个直辖市分别为 : 北京 天津 上海 重庆
 $cities = array('bj', 'sh', 'tj', 'cq');
+$school_tbl = 'cs_school_dax';
 
 /**
  * main part of the crawler
@@ -57,7 +58,7 @@ try {
             's_imgurl',
             'addtime',
 	    );
-        $sql = " INSERT INTO `cs_school_dax` (`". implode('`,`', $fields) ."`) VALUES ( ";
+        $sql = " INSERT INTO `{$school_tbl}` (`". implode('`,`', $fields) ."`) VALUES ( ";
         $sql .= "'". implode("','", $school) ."') ";
         $insert_ok = $db->query($sql);
 	    if ( $insert_ok ) {
@@ -67,6 +68,12 @@ try {
             $save_picture_ok = save_local_picture($sid, 'upload/thumb', $school['s_thumb']);
             if ( $save_picture_ok ) {
                 echo t() . " 保存驾校缩略图到本地成功，路径为: $save_picture_ok.\n";
+                $update_thumb_ok = update_thumb_url($db, $school_tbl, $sid, $save_picture_ok);
+                if ( $update_thumb_ok ) {
+                    echo t() . " 更新驾校缩略图到数据库成功\n";
+                } else {
+                    echo t() . " *** 更新驾校缩略图到数据库 Fail ***\n";
+                }
             };
 	    } else {
 		    $fail_count++;
@@ -95,7 +102,17 @@ $db = null;
  * [3] get_school_detail
  * [4] save_local_picture
  * [5] t
+ * [6] update_thumb_url
  */
+
+function update_thumb_url ($db, $school_tbl, $id = 0, $url = '') {
+    if ( empty($id) || empty($url) ) {
+        return false;
+    }
+    $sql = " UPDATE $school_tbl SET `s_thumb` = '{$url}' WHERE `l_school_id` = '{$id}' ";
+    $result = $db->query($sql);
+    return $result;
+}
 
 function t( $ts = 0 ) {
     if ( $ts === 0) {
@@ -105,8 +122,22 @@ function t( $ts = 0 ) {
     return date('Y-m-d H:i:s', $sec) .".". explode('.', $usec)[1];
 }
 
-function save_local_picture ($sid, $path, $picture_url) {
-    return "$path/$sid.png";
+function save_local_picture ($id, $path = '.', $picture_url) {
+    if ( !file_exists($path) ) {
+        mkdir($path, 0777, true);
+    }
+    $url_arr = explode('.', $picture_url);
+    $ext = $url_arr[count($url_arr)-1];
+    $fn = "$path/$id.$ext";
+    $picture = file_get_contents($picture_url);
+    $fp = fopen($fn, 'w');
+    fwrite($fp, $picture);
+    fclose($fp);
+    if ( file_exists($fn) ) {
+        return $fn;
+    } else {
+        return false;
+    }
 }
 
 function get_school_detail ( $school_id ) {
@@ -213,7 +244,7 @@ function get_school_by_city ( $city ) {
             );
             echo "Get one school:" . $school['s_school_name'] . "\n";
             $school_list[] = $school;
-            if ( count($school_list) > 2 ) {
+            if ( count($school_list) > 1 ) {
                 return $school_list;
             }
         }
