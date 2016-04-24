@@ -16,6 +16,7 @@ include_once '../include/functions.php';
 // 中国四个直辖市分别为 : 北京 天津 上海 重庆
 $cities = array('bj', 'sh', 'tj', 'cq');
 $school_tbl = 'cs_school_dax';
+$shifts_tbl = 'cs_school_shifts_dax';
 
 /**
  * main part of the crawler
@@ -64,17 +65,22 @@ try {
 	    if ( $insert_ok ) {
             $sid = $db->lastInsertId();
 		    $ok_count++;
-		    echo t() . " 成功写入第: $ok_count 所驾校.\n";
+		    echo t() . " 成功写入第 $ok_count 所驾校\n";
             $save_picture_ok = save_local_picture($sid, 'upload/thumb', $school['s_thumb']);
             if ( $save_picture_ok !== false ) {
-                echo t() . " 保存驾校缩略图到本地成功，路径为: $save_picture_ok.\n";
+                echo t() . " 保存驾校缩略图到本地成功，路径为: [$save_picture_ok]\n";
                 $update_thumb_ok = update_thumb_url($db, $school_tbl, $sid, $save_picture_ok);
                 if ( $update_thumb_ok ) {
                     echo t() . " 更新驾校缩略图到数据库成功\n";
                 } else {
                     echo t() . " *** 更新驾校缩略图到数据库 Fail ***\n";
                 }
-            };
+            }
+
+            $add_shift_ok = add_school_shift($db, $shifts_tbl, $sid, $school['dc_base_je'], $school['dc_base_je']);
+            if ( $add_shift_ok !== false ) {
+                echo t() . " 添加班制成功, 班制id: $add_shift_ok\n";
+            }
 	    } else {
 		    $fail_count++;
 		    echo t() . " 写入失败.\n";
@@ -85,11 +91,11 @@ try {
     exit();
 }
 
-echo "-------------------------------------\n";
-echo "成功写入: $ok_count, 发生错误: $fail_count.\n";
-echo t() . " completed.\n";
-echo "             program written by daxg.\n";
-echo "-------------------------------------\n";
+echo "-------------------------------------------------\n";
+echo "\t成功写入: $ok_count, 发生错误: $fail_count.\n";
+echo "\t" . t() . " completed.\n";
+echo "\t\tprogram written by daxg.\n";
+echo "-------------------------------------------------\n";
 
 $db = null;
 // Execution of the crawler End
@@ -103,7 +109,40 @@ $db = null;
  * [4] save_local_picture
  * [5] t
  * [6] update_thumb_url
+ * [7] add_school_shift
  */
+
+function add_school_shift ( $db, $shifts_tbl, $sid, $price = 0.0, $original_price = 0.0) {
+    $fields = array(
+        'sh_school_id',
+        'sh_title',
+        'sh_money',
+        'sh_original_money',
+        'sh_type',
+        'sh_description_1',
+        'sh_description_2',
+        'addtime',
+    );
+    $data = array(
+        $sid,
+        '普通班',
+        $price,
+        $original_price,
+        2,
+        '费用低',
+        '服务好，但拿证较慢',
+        time(),
+    );
+    $sql = " INSERT INTO `{$shifts_tbl}` (`".implode('`,`', $fields)."`) ";
+    $sql .= " VALUES ";
+    $sql .= " ('".implode("','", $data)."') ";
+    $result = $db->query($sql);
+
+    if ( $result ) {
+        return $db->lastInsertId();
+    }
+    return false;
+}
 
 function update_thumb_url ($db, $school_tbl, $id = 0, $url = '') {
     if ( empty($id) || empty($url) ) {
