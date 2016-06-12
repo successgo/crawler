@@ -32,6 +32,7 @@ def urlFact(car, lesson, base = 'http://www.ybjk.com/'):
     return url
 
 def urlRequest(url, headers = headers):
+    chapter_list = []
     r = requests.get(url, headers = headers)
     if not r.status_code == 200:
         return False
@@ -39,16 +40,20 @@ def urlRequest(url, headers = headers):
     results = soup.findAll('script')
     for i in results:
         if 'html' in i.getText():
-             i.getText().split('"')[1][4:]
+             chapter_list.append(i.getText().split('"')[1][4:])
+
+    return chapter_list
 
 def main():
+    fp = open('chapter.txt', 'w')
     for c in car:
         for l in lesson:
             url = urlFact(car = c, lesson = l)
             chapter_list = urlRequest(url = url)
-            print chapter_list
-            #for chap in chapter_list:
-                #print c+':'+l+':'+chap
+            for chap in chapter_list:
+                record = c+':'+l+':'+chap+'\n'
+                fp.write(record)
+    fp.close()
 
 # start
 if __name__ == '__main__':
