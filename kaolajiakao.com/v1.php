@@ -13,6 +13,5 @@ foreach ($ctype as $c) {
             saveExams($db, $c, $s, $v['ctype'], $v['stype'], $v['cid'], $examid_list, $apiurl);
         }
         echo "******************************************\n";
-        exit();
     }
 }
