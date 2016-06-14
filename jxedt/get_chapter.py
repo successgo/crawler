@@ -42,8 +42,23 @@ def find_chapter(html):
             statement_list = innerHtml.split(';')
             for statement in statement_list:
                 if 'chapexamid' in statement:
-                    chapterid = statement.split('=')[1][1:]
-                    return chapterid
+                    if 'chapexamids = []' in statement:
+                        return False
+                    chapter = statement.split('=')[1][2:-1]
+                    chapter = chapter.replace('],[', ']:[')
+                    chapter = chapter.replace(']', '')
+                    chapter = chapter.replace('[', '')
+                    chapter = chapter.split(':')
+                    exam_id_list = []
+                    for i in chapter:
+                        left = int(i.split(',')[0])
+                        right = int(i.split(',')[1])
+                        if left <= right:
+                            while left <= right:
+                                exam_id_list.append(str(left))
+                                left = left + 1
+                    e = ','.join(exam_id_list)
+                    return e
     return False
 
 def now_time():
@@ -67,7 +82,7 @@ def log(fn, msg, time = True):
     fp.close()
 
 def main():
-    """get exams by chapterid, subject-Type, car-Type"""
+    """get exams by chapter-id, subject-Type, car-Type"""
     for c in ctype:
         for s in stype:
             chapter_id = 1
@@ -77,9 +92,10 @@ def main():
                 req_result = request_url(url, headers)
                 if req_result != False:
                     chapter = find_chapter(req_result)
+                    print '****' + c + ':' + s + ':' + str(chapter_id) + '****'
                     if chapter != False:
                         print now_time() + ' get it'
-                        record = c + '|' + s + '|' + chapter
+                        record = c + '|' + s + '|' + str(chapter_id) + '|' + chapter
                         log('chapter.txt', record, time = False)
                         log('log.txt', chapter)
                 else:
