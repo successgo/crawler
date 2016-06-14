@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# get_exam.py
+# get_chapter.py
 # v1
 
 # refer: mnks.jxedt.com/akm1/zjlx/3/
