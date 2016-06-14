@@ -38,7 +38,7 @@ foreach ($chapters as $chapter) {
         if ( !empty($exam['sinaimg']) ) {
             $imgurl = 'images/' . $exam['sinaimg'];
         } else if (!empty($exam['imageurl'])) {
-            if (true === strpos($exam['imageurl'], 'img.58cdn.com.cn')) {
+            if (strpos($exam['imageurl'], '58cdn.com.cn')) {
                 $imgurl = $exam['imageurl'];
             }
         }
