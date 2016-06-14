@@ -7,6 +7,9 @@ $chapters = explode("\n", $f);
 $count = 1;
 foreach ($chapters as $chapter) {
     $chapter_ar = explode('|', $chapter);
+    if ($chapter_ar[0] === '') {
+        continue;
+    }
     $chapter_ar[3] = explode(',', $chapter_ar[3]);
     $ctype = $chapter_ar[0];
     $stype = $chapter_ar[1];
@@ -31,6 +34,14 @@ foreach ($chapters as $chapter) {
         $url = $baseurl . $exam_id;
         $exam = file_get_contents($url);
         $exam = json_decode($exam, true);
+        $imgurl = '';
+        if ( !empty($exam['sinaimg']) ) {
+            $imgurl = 'images/' . $exam['sinaimg'];
+        } else if (!empty($exam['imageurl'])) {
+            if (true === strpos($exam['imageurl'], 'img.58cdn.com.cn')) {
+                $imgurl = $exam['imageurl'];
+            }
+        }
         $values_buf = array(
             addslashes($exam['question']),
             addslashes($exam['a']),
@@ -38,7 +49,7 @@ foreach ($chapters as $chapter) {
             addslashes($exam['c']),
             addslashes($exam['d']),
             addslashes($exam['ta']),
-            ($exam['sinaimg'] != '') ? 'images/' . $exam['sinaimg'] : '',
+            addslashes($imgurl),
             addslashes($exam['bestanswer']),
             addslashes($exam['Type']),
             addslashes($ctype),

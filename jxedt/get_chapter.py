@@ -17,7 +17,7 @@ sys.setdefaultencoding('utf8')
 baseurl = 'http://mnks.jxedt.com/'
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36'}
 
-ctype = ['a', 'b', 'c', 'd']
+ctype = ['a', 'b', 'c', 'e']
 stype = ['1', '4']
 
 def urlFact(ctype, stype, cid):
@@ -98,11 +98,12 @@ def main():
                         record = c + '|' + s + '|' + str(chapter_id) + '|' + chapter
                         log('chapter.txt', record, time = False)
                         log('log.txt', chapter)
+                    else:
+                        if chapter_id > 20:
+                            chapter_exists = False
                 else:
                     print now_time() + ' request error'
                     log('log.txt', 'request error')
-                if chapter_id > 4:
-                    chapter_exists = False
                 chapter_id = chapter_id + 1
 
 
