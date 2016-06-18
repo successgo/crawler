@@ -46,7 +46,7 @@ def main():
         for s in stype:
             url = url_fact(stype = stype[s], ctype = ctype[c])
             exam_ids = request_url(url)
-            ids = ';\n'.join(str(c)+'|'+str(s)+'|'+str(x) for x in exam_ids)
+            ids = '\n'.join(str(c)+'|'+str(s)+'|'+str(x) for x in exam_ids)
             log('exam_ids.txt', ids)
 
 if __name__ == '__main__':
