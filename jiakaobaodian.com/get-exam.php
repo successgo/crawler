@@ -41,8 +41,9 @@ foreach ($exam_ids as $line) {
         continue;
     }
     if ($info['mediaType'] > 0 && $info['mediaContent'] != '') {
+        save_media('media-url.txt', $info['mediaContent']);
         $media = explode('/', $info['mediaContent']);
-        $fn = $media[count($media)-1];
+        $fn = 'images/' . $media[count($media)-1];
     }
     $values_buf = array(
         addslashes($info['question']),
@@ -65,6 +66,19 @@ foreach ($exam_ids as $line) {
     } else {
         echo "save failed and exam info is $ctype-$stype-$id\n";
     }
+}
+
+function save_media($fn = 'log.txt', $msg) {
+    if (file_exists($fn)) {
+        $fp = fopen($fn, 'a');
+    } else {
+        $fp = fopen($fn, 'w');
+    }
+    if ($msg != '') {
+        $msg .= "\n";
+    }
+    fwrite($fp, $msg);
+    fclose($fp);
 }
 
 function save_exam($db, $fields, $values, $table = 'cs_exams_tmp') {
