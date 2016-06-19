@@ -40,10 +40,11 @@ foreach ($exam_ids as $line) {
     } else {
         continue;
     }
+    $fn = '';
     if ($info['mediaType'] > 0 && $info['mediaContent'] != '') {
         save_media('media-url.txt', $info['mediaContent']);
         $media = explode('/', $info['mediaContent']);
-        $fn = 'images/' . $media[count($media)-1];
+        $fn = '/v2/' . $media[count($media)-1];
     }
     $values_buf = array(
         addslashes($info['question']),
@@ -52,7 +53,7 @@ foreach ($exam_ids as $line) {
         addslashes($info['optionC']),
         addslashes($info['optionD']),
         restore_answer($info['answer']),
-        isset($fn) ? $fn : '',
+        empty($fn) ? '' : $fn,
         addslashes($info['explain']),
         $info['optionType'] + 1,
         addslashes($info['chapterId']),
