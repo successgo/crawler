@@ -7,7 +7,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 
-'''grab question id and save it to question-ids.txt file'''
+'''grab question id and save it to resource-question-ids.txt file'''
 
 def save_txt(content, file_name = 'log.txt', new_line = True, over_write = False):
     ''' save text to file '''
