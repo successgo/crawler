@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 # get-chapter.py
 
-# refer: 
-# [1] http://www.ybjk.com/kms-zjlx-xc/
-# [2] http://www.ybjk.com/lianxiti-xc.js?r=t287hxc5um&act=kms-sxlx&cx=xc&zid=1511
-# [3] http://jsc.mnks.cn/ybjk/js/lianxi2013_v3.js?t=201512.js
+# refer:
+    # [1] http://www.ybjk.com/kms-zjlx-xc/
+    # [2] http://www.ybjk.com/lianxiti-xc.js?r=t287hxc5um&act=kms-sxlx&cx=xc&zid=1511
+    # [3] http://jsc.mnks.cn/ybjk/js/lianxi2013_v3.js?t=201512.js
 
 import os
 import sys
@@ -40,7 +40,7 @@ def urlRequest(url, headers = headers):
     results = soup.findAll('script')
     for i in results:
         if 'html' in i.getText():
-             chapter_list.append(i.getText().split('"')[1][4:])
+            chapter_list.append(i.getText().split('"')[1][4:])
 
     return chapter_list
 
@@ -53,7 +53,7 @@ def main():
             for chap in chapter_list:
                 record = c+':'+l+':'+chap+'\n'
                 fp.write(record)
-    fp.close()
+                fp.close()
 
 # start
 if __name__ == '__main__':
