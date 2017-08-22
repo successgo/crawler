@@ -37,7 +37,7 @@ def build_url(question_ids):
     base_url = 'http://api2.jiakaobaodian.com/api/open/question/question-list.htm?_r=15822608861463596095&page=1&_=0.877899413535759&questionIds='
     return base_url + question_ids
 
-def Itquestions(file_name = 'resource_question_ids.txt'):
+def Itquestions(file-name = 'resource-question-ids.txt'):
     fp = open(file_name, 'r')
     contents = fp.read()
     chapters = filter(lambda x: x != '', contents.split('\n'))
