@@ -37,7 +37,7 @@ def build_url(question_ids):
     base_url = 'http://api2.jiakaobaodian.com/api/open/question/question-list.htm?_r=15822608861463596095&page=1&_=0.877899413535759&questionIds='
     return base_url + question_ids
 
-def Itquestions(file-name = 'resource-question-ids.txt'):
+def Itquestions(file_name = 'resource-question-ids.txt'):
     fp = open(file_name, 'r')
     contents = fp.read()
     chapters = filter(lambda x: x != '', contents.split('\n'))
@@ -94,8 +94,9 @@ if __name__ == '__main__':
             str(q[u'trueCount']),
             str(q[u'wrongRate'])
         ]
-        raw_string = ','.join(_s)
-        save_txt(raw_string, 'resource_question_detail.txt')
+        raw_string = "','".join(_s)
+        raw_string = "('" + raw_string + "'),"
+        save_txt(raw_string, 'resource-question-detail.txt')
         counter = counter + 1
         print 'now %d has been completed' % counter
 
