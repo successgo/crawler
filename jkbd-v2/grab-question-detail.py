@@ -47,6 +47,8 @@ def Itquestions(file_name = 'resource-question-ids.txt'):
 if __name__ == '__main__':
     counter = 0
     for question in Itquestions():
+        car_type = question[0]
+        course = question[1]
         url = build_url(question[2])
         question_detail = get_json(url)[u'data'][0]
         q = question_detail
@@ -69,6 +71,8 @@ if __name__ == '__main__':
         if q[u'optionH'] == None:
             q[u'optionH'] = ''
         _s = [
+            car_type,
+            course,
             str(q[u'answer']),
             str(q[u'chapterId']),
             str(q[u'difficulty']),
