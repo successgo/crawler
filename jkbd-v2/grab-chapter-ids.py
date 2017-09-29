@@ -73,4 +73,4 @@ if __name__ == '__main__':
         print chapter_ids
 
         raw_string = '\n'.join(str(item['car_type']) + '|' + str(item['course']) + '|' + str(id) for id in chapter_ids)
-        save_txt(raw_string, 'chapter_ids.txt')
+        save_txt(raw_string, 'resource-chapter-ids.txt')

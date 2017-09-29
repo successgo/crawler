@@ -85,4 +85,4 @@ if __name__ == '__main__':
             raw_string = '%s|%s|%s|%s|%s' % (item['car_type'], item['course'], r['big'], r['small'], r['link'])
             print 'saving: %s' % raw_string
             utf8_string = raw_string.encode('UTF-8')
-            save_txt(utf8_string, 'resource-question-type.txt')
+            save_txt(utf8_string, 'resource-question-label.txt')

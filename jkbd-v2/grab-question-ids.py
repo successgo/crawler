@@ -60,4 +60,4 @@ if __name__ == '__main__':
         question_ids = result[u'data']
 
         raw_string = '\n'.join(str(item['car_type']) + '|' + str(item['course']) + '|' + str(id) for id in question_ids)
-        save_txt(raw_string, 'question_ids.txt')
+        save_txt(raw_string, 'resource-question-ids.txt')

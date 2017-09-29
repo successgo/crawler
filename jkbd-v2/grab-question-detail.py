@@ -50,7 +50,15 @@ if __name__ == '__main__':
         car_type = question[0]
         course = question[1]
         url = build_url(question[2])
-        question_detail = get_json(url)[u'data'][0]
+        while True:
+            fail = 1
+            question_results = get_json(url)[u'data']
+            if len(question_results) > 0:
+                question_detail = question_results[0]
+                break
+            else:
+                print 'fail to fetch: %s,%s,%s[%d times]' % (car_type, course, str(question[2]), fail)
+                fail = fail + 1
         q = question_detail
 
         # answer,chapter_id,difficulty,explain,id,label,media_height,media_type,media_width,option_a,option_b,option_c,option_d,option_e,option_f,option_g,option_h,option_type,question,question_id,media_content,false_count,true_count,wrong_rate

@@ -20,7 +20,7 @@ def save_txt(content, file_name = 'log.txt', new_line = True, over_write = False
     fp.write(content)
     fp.close()
 
-def Itchapters(file_name = 'resource_chapter_ids.txt'):
+def Itchapters(file_name = 'resource-chapter-ids.txt'):
     fp = open(file_name, 'r')
     contents = fp.read()
     chapters = filter(lambda x: x != '', contents.split('\n'))
@@ -54,4 +54,4 @@ if __name__ == '__main__':
         raw_string = ','.join(_s)
         utf8_string = raw_string.encode('UTF-8')
         print utf8_string
-        save_txt(utf8_string, 'resource_chapter_detail.txt')
+        save_txt(utf8_string, 'resource-chapter-detail.txt')
